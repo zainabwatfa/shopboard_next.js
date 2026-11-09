@@ -1,0 +1,51 @@
+import { fieldControlClasses } from "@/components/ui/input";
+import { cn } from "@/lib/cn";
+
+export type SelectOption = {
+  value: string;
+  label: string;
+};
+
+export interface SelectFieldProps {
+  id: string;
+  label: string;
+  value: string;
+  options: readonly SelectOption[];
+  // The chosen option's value as plain text: the caller checks it
+  onChange: (value: string) => void;
+}
+
+// A labelled drop-down, drawn like the Input (shared fieldControlClasses).
+// The chevron is two tiny gradients, so it follows the text colour in both
+// themes.
+export function SelectField({
+  id,
+  label,
+  value,
+  options,
+  onChange,
+}: SelectFieldProps) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label htmlFor={id} className="text-sm font-bold text-ink">
+        {label}
+      </label>
+      <select
+        id={id}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className={cn(
+          fieldControlClasses,
+          "cursor-pointer pr-11 bg-[linear-gradient(45deg,transparent_50%,currentColor_50%),linear-gradient(135deg,currentColor_50%,transparent_50%)] bg-position-[calc(100%_-_1.375rem)_52%,calc(100%_-_1rem)_52%] bg-size-[0.375rem_0.375rem] bg-no-repeat",
+          "focus-visible:shadow-[4px_4px_0_var(--color-st-lav-shade)] focus-visible:outline-3 focus-visible:outline-transparent",
+        )}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}

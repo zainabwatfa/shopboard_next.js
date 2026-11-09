@@ -1,16 +1,26 @@
-import { UiPreview } from "./ui-preview";
+import { ShopView } from "@/features/products/components/ShopView";
+import { parseFilters } from "@/features/products/products.logic.ts";
+import { loadProducts } from "@/features/products/products.server.ts";
 
-export default function ShopPage() {
-  return (
-    <main className="mx-auto w-full max-w-7xl px-5 py-10">
-      <h1 className="mb-2 font-poster text-5xl font-black text-ink">
-        Shop<em className="not-italic text-accent">Board</em> UI kit
-      </h1>
-      <p className="mb-10 max-w-xl text-lg text-smoke">
-        Temporary preview of the five ui primitives. This page becomes the
-        shop: hero, filters and the product grid.
-      </p>
-      <UiPreview />
-    </main>
-  );
+// ?q=tote gives "tote", ?q=a&q=b gives "a", and a missing key gives ""
+function firstValue(value: string | string[] | undefined): string {
+  if (Array.isArray(value)) {
+    return value[0] ?? "";
+  }
+  return value ?? "";
+}
+
+// The shop (/). A Server Component: it reads the products and the URL's
+// filters on the server, so the HTML already holds the filtered list, then
+// hands both to the interactive ShopView.
+export default async function ShopPage({ searchParams }: PageProps<"/">) {
+  const params = await searchParams;
+  const products = await loadProducts();
+  const initialFilters = parseFilters({
+    query: firstValue(params.q).trim(),
+    category: firstValue(params.category),
+    sortKey: firstValue(params.sort),
+  });
+
+  return <ShopView products={products} initialFilters={initialFilters} />;
 }

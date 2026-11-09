@@ -1,6 +1,6 @@
 // The footer's links. Data only: Footer.tsx turns the groups into columns.
-// Links inside the site never start with "/": GitHub Pages serves a project
-// site under /<repo-name>/, so "/cart.html" would point outside it.
+// Unlike the GitHub Pages versions, this site is served from the root, so
+// links inside the site are plain routes starting with "/".
 
 export type SiteLink = {
   href: string;
@@ -12,15 +12,15 @@ export type LinkGroup = {
   links: readonly SiteLink[];
 };
 
-const REPO_URL = "https://github.com/zainabwatfa/shopboard_react";
+const REPO_URL = "https://github.com/zainabwatfa/shopboard_next.js";
 
 // Only pages that exist in this site, plus the photo credits and the code on GitHub
 export const FOOTER_GROUPS: readonly LinkGroup[] = [
   {
     heading: "Shop",
     links: [
-      { href: "index.html", label: "All products" },
-      { href: "cart.html", label: "Cart" },
+      { href: "/", label: "All products" },
+      { href: "/cart", label: "Cart" },
     ],
   },
   {

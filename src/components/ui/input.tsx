@@ -7,11 +7,16 @@ import { cn } from "@/lib/cn";
 
 type InputProps = ComponentProps<"input">;
 
+/* The field look, shared with SelectField so the <select> matches without
+   copying classes. */
+export const fieldControlClasses =
+  "min-h-12 w-full appearance-none rounded-input border-2 border-line bg-card px-4 py-3 font-sans text-base text-ink";
+
 export function Input({ className, ...props }: InputProps) {
   return (
     <input
       className={cn(
-        "min-h-12 w-full appearance-none rounded-input border-2 border-line bg-card px-4 py-3 font-sans text-base text-ink",
+        fieldControlClasses,
         "placeholder:text-ash placeholder:opacity-100",
         "focus-visible:shadow-[4px_4px_0_var(--color-st-lav-shade)] focus-visible:outline-3 focus-visible:outline-transparent",
         "aria-invalid:border-down aria-invalid:shadow-[3px_3px_0_var(--color-down)]",
