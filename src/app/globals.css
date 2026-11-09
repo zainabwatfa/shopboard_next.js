@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/* ShopBoard "sticker" look: 2px ink outlines, flat offset shadows (no blur),
+   pastel tint + darker shade pairs, paper backgrounds, poster headings.
+
+   Theme: <html data-theme> is set by the theme switch. "light" or "dark"
+   override the device setting; no data-theme (System) follows the device.
+   The raw values live on :root and flip with the theme; @theme inline below
+   maps them to Tailwind tokens, so bg-surface, text-ink, border-line, …
+   follow the theme on their own. */
+
+/* ---------- Raw theme values (light) ---------- */
+:root {
+  /* System: native controls and scrollbars follow the device */
+  color-scheme: light dark;
+
+  /* Neutrals */
+  --surface: #f5eeee;
+  --surface-grid: #faf5f5;
+  --paper: #ece3e5;
+  --card: #fff8f8;
+  --ink: #1f1a23;
+  --smoke: #5c5466;
+  --ash: #6b6474;
+  --hairline: #dccfd3;
+  --hairline-2: #c7b8be;
+  --line: #1f1a23;
+  --shadow-ink: #1f1a23;
+  --panel: #1f1a23;
+  --on-panel: #fff8f8;
+  --on-panel-muted: #cdc4cc;
+  --panel-line: #4a4050;
+
+  /* Meaning */
+  --accent: #7d42ab;
+  --down: #b42f2f;
+
+  /* Per-card sticker pair: the tint fills, the shade is only used for its
+     shadow. Components override these per card (tint variants). */
+  --st-tint: var(--color-st-lav);
+  --st-shade: var(--color-st-lav-shade);
+}
+
+/* Light chosen in the switch: the light tokens above, even on a dark device */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Dark tokens. They apply when Dark is chosen, or when the device is dark and
+   Light is not chosen. CSS can't put a selector and a media query in one rule,
+   so this block is written twice: keep both copies identical. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface: #15111a;
+  --surface-grid: #1a1520;
+  --paper: #1d1723;
+  --card: #221b29;
+  --ink: #f5eeee;
+  --smoke: #c3b8cc;
+  --ash: #a99cb2;
+  --hairline: #3a3042;
+  --hairline-2: #4a3f53;
+  --line: #7a6890;
+  --shadow-ink: #9e5ecf;
+  --panel: #2c2433;
+  --panel-line: #4f4459;
+  --accent: #d6a6f5;
+  --down: #ff8a8a;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Same as :root[data-theme="dark"] above */
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface: #15111a;
+    --surface-grid: #1a1520;
+    --paper: #1d1723;
+    --card: #221b29;
+    --ink: #f5eeee;
+    --smoke: #c3b8cc;
+    --ash: #a99cb2;
+    --hairline: #3a3042;
+    --hairline-2: #4a3f53;
+    --line: #7a6890;
+    --shadow-ink: #9e5ecf;
+    --panel: #2c2433;
+    --panel-line: #4f4459;
+    --accent: #d6a6f5;
+    --down: #ff8a8a;
+  }
+}
+
+/* ---------- Design tokens (static) ---------- */
+@theme {
+  /* Sticker pairs: the same in both themes, always with ink text on top */
+  --color-st-lav: #c98cf0;
+  --color-st-lav-shade: #9e5ecf;
+  --color-st-pink: #ffb0c2;
+  --color-st-pink-shade: #ff7ea3;
+  --color-st-green: #93f091;
+  --color-st-green-shade: #4fcd4c;
+  --color-st-yellow: #ffb500;
+  --color-st-yellow-shade: #ff9100;
+  --color-on-fill: #1f1a23;
+  /* Light base for product wells, so dark products stay visible in dark mode */
+  --color-st-paper: #fff8f8;
+
+  /* Geometry */
+  --radius-st: 28px;
+  --radius-st-sm: 18px;
+  --radius-st-xs: 12px;
+  --radius-input: 14px;
+
+  /* Flat offset sticker shadows (no blur). --st-shade resolves on the element,
+     so a card's tint variant decides the shadow colour. */
+  --shadow-st-lg: 8px 8px 0 var(--st-shade);
+  --shadow-st-md: 5px 5px 0 var(--st-shade);
+  --shadow-st-sm: 3px 3px 0 var(--st-shade);
+  --shadow-ink-lg: 8px 8px 0 var(--shadow-ink);
+  --shadow-ink-md: 5px 5px 0 var(--shadow-ink);
+  --shadow-ink-sm: 3px 3px 0 var(--shadow-ink);
+
+  --ease-st: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Design tokens (follow the theme) ---------- */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-grid: var(--surface-grid);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-smoke: var(--smoke);
+  --color-ash: var(--ash);
+  --color-hairline: var(--hairline);
+  --color-hairline-2: var(--hairline-2);
+  --color-line: var(--line);
+  --color-panel: var(--panel);
+  --color-on-panel: var(--on-panel);
+  --color-on-panel-muted: var(--on-panel-muted);
+  --color-panel-line: var(--panel-line);
+  --color-accent: var(--accent);
+  --color-down: var(--down);
+
+  /* Fonts: the --font-* variables come from next/font in app/layout.tsx */
+  --font-poster: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans:
+    var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+}
+
+/* ---------- Base element styles ---------- */
+@layer base {
+  html {
+    scroll-padding-top: 1rem;
+  }
+
+  body {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  ::selection {
+    background: var(--color-st-pink);
+    color: var(--color-on-fill);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
