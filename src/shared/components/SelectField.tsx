@@ -15,9 +15,16 @@ export interface SelectFieldProps {
   onChange: (value: string) => void;
 }
 
-// A labelled drop-down, drawn like the Input (shared fieldControlClasses).
-// The chevron is two tiny gradients, so it follows the text colour in both
-// themes.
+// The select look: the Input's field classes plus a chevron drawn with two
+// tiny gradients, so it follows the text colour in both themes. Shared with
+// the checkout form's selects.
+export const selectControlClasses = cn(
+  fieldControlClasses,
+  "cursor-pointer pr-11 bg-[linear-gradient(45deg,transparent_50%,currentColor_50%),linear-gradient(135deg,currentColor_50%,transparent_50%)] bg-position-[calc(100%_-_1.375rem)_52%,calc(100%_-_1rem)_52%] bg-size-[0.375rem_0.375rem] bg-no-repeat",
+  fieldFocusClasses,
+);
+
+// A labelled drop-down, drawn like the Input.
 export function SelectField({
   id,
   label,
@@ -34,11 +41,7 @@ export function SelectField({
         id={id}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className={cn(
-          fieldControlClasses,
-          "cursor-pointer pr-11 bg-[linear-gradient(45deg,transparent_50%,currentColor_50%),linear-gradient(135deg,currentColor_50%,transparent_50%)] bg-position-[calc(100%_-_1.375rem)_52%,calc(100%_-_1rem)_52%] bg-size-[0.375rem_0.375rem] bg-no-repeat",
-          fieldFocusClasses,
-        )}
+        className={selectControlClasses}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
