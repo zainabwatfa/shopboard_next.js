@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 export interface HeaderProps {
-  // What sits next to the logo: the main navigation (and later the theme switch)
+  // What sits next to the logo: the main navigation and the theme switch
   children: ReactNode;
 }
 
