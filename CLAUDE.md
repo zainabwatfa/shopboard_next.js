@@ -58,4 +58,7 @@ and typed props, used everywhere and never copied; tokens in `@theme`; deployed 
 ## Scripts
 
 `npm run dev` (http://localhost:3000), `npm run lint`, `npm run build` (includes type
-checking). Run lint and build after every change.
+checking), `npm run format:check` (Prettier; the copied files are in `.prettierignore`,
+so a formatter never touches them — check with `cmp`/`git diff` after formatting).
+Run lint, build and format:check after every change. `.gitattributes` forces LF
+everywhere, so format:check also passes on a fresh Windows checkout.

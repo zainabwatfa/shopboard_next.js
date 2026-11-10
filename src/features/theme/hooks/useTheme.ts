@@ -63,7 +63,11 @@ export interface ThemeControl {
 // The System / Light / Dark switch's state. The <head> script already applied
 // the saved theme before the page was drawn; this keeps it right afterwards.
 export function useTheme(): ThemeControl {
-  const choice = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const choice = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   // The CSS reads <html data-theme>: "light" or "dark" override the device
   // setting, and no attribute (System) follows the device

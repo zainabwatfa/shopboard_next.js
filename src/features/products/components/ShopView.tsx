@@ -6,6 +6,7 @@ import { StatusMessage } from "@/shared/components/StatusMessage";
 import { Toast } from "@/shared/components/Toast";
 import { useToast } from "@/shared/hooks/useToast.ts";
 import { useCart } from "@/features/cart/hooks/useCart.ts";
+import { useCartCleanup } from "@/features/cart/hooks/useCartCleanup";
 import { getItemQty } from "@/features/cart/cart.logic.ts";
 import { getAddedMessage, getResultsStatus } from "@/lib/messages.ts";
 import { HERO_TILES } from "../hero.ts";
@@ -34,6 +35,7 @@ export interface ShopViewProps {
 // Server Component in app/page.tsx.
 export function ShopView({ products, initialFilters }: ShopViewProps) {
   const { actions } = useCart();
+  useCartCleanup(products);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const { toast, showToast, dismissToast } = useToast();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -49,11 +51,6 @@ export function ShopView({ products, initialFilters }: ShopViewProps) {
     setSyncedWith(initialFilters);
     setFilters(initialFilters);
   }
-
-  // Once the products are known, drop cart items whose product no longer exists
-  useEffect(() => {
-    actions.keepOnly(products.map((product) => product.id));
-  }, [products, actions]);
 
   // Keeps the address bar in step with the filters, without a reload and
   // without adding Back steps, so a link, a bookmark or a reload shows the

@@ -1,120 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import type { UseFormRegisterReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/cn";
 import { formatMoney } from "@/lib/format.ts";
-import { selectControlClasses } from "@/shared/components/SelectField";
 import { getCartLines, getCartTotal } from "@/features/cart/cart.logic.ts";
 import { useCart } from "@/features/cart/hooks/useCart.ts";
-import { ProductImage } from "@/features/products/components/ProductImage";
+import { useCartCleanup } from "@/features/cart/hooks/useCartCleanup";
 import type { Product } from "@/features/products/products.types.ts";
-import {
-  DEFAULT_CHECKOUT_VALUES,
-  checkoutSchema,
-} from "../checkout.schema.ts";
+import { DEFAULT_CHECKOUT_VALUES, checkoutSchema } from "../checkout.schema.ts";
 import type { CheckoutFormValues } from "../checkout.schema.ts";
-
-interface ConfirmedOrder {
-  id: string;
-  total: number;
-  customerName: string;
-  email: string;
-  shippingMethod: string;
-  address: string;
-  city: string;
-}
-
-// One labelled text input wired to react-hook-form: registration carries
-// name, ref and the change/blur handlers from register(). The error turns
-// the label and the Input red (aria-invalid) and is read with the field
-// (aria-describedby).
-type TextFieldProps = {
-  label: string;
-  placeholder?: string;
-  type?: string;
-  error: string | undefined;
-  registration: UseFormRegisterReturn;
-};
-
-function TextField({
-  label,
-  placeholder,
-  type = "text",
-  error,
-  registration,
-}: TextFieldProps) {
-  const id = registration.name;
-  const errorId = `${id}-error`;
-  return (
-    <div className="flex flex-col gap-2">
-      <label
-        htmlFor={id}
-        className={cn("text-sm font-bold", error ? "text-down" : "text-ink")}
-      >
-        {label}
-      </label>
-      <Input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        aria-invalid={error === undefined ? undefined : true}
-        aria-describedby={error === undefined ? undefined : errorId}
-        {...registration}
-      />
-      {error === undefined ? null : (
-        <p id={errorId} className="m-0 text-[0.8125rem] font-semibold text-down">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
-
-// A labelled select wired the same way, with a small description line
-type SelectInputProps = {
-  label: string;
-  description: string;
-  registration: UseFormRegisterReturn;
-  options: readonly { value: string; label: string }[];
-};
-
-function SelectInput({
-  label,
-  description,
-  registration,
-  options,
-}: SelectInputProps) {
-  const id = registration.name;
-  const hintId = `${id}-hint`;
-  return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm font-bold text-ink">
-        {label}
-      </label>
-      <select
-        id={id}
-        aria-describedby={hintId}
-        className={selectControlClasses}
-        {...registration}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <p id={hintId} className="m-0 text-[0.8125rem] text-smoke">
-        {description}
-      </p>
-    </div>
-  );
-}
+import { SelectInput, TextField } from "./CheckoutFields";
+import { CheckoutSummary } from "./CheckoutSummary";
+import { OrderConfirmation } from "./OrderConfirmation";
+import type { ConfirmedOrder } from "./OrderConfirmation";
 
 export interface CheckoutViewProps {
   products: readonly Product[];
@@ -126,11 +27,7 @@ export interface CheckoutViewProps {
 // builds a confirmation and clears the cart.
 export function CheckoutView({ products }: CheckoutViewProps) {
   const { state: cart, actions } = useCart();
-
-  // Once the products are known, drop cart items whose product no longer exists
-  useEffect(() => {
-    actions.keepOnly(products.map((product) => product.id));
-  }, [products, actions]);
+  useCartCleanup(products);
 
   const [orderCounter, setOrderCounter] = useState(10482);
   const [confirmedOrder, setConfirmedOrder] = useState<ConfirmedOrder | null>(
@@ -182,44 +79,7 @@ export function CheckoutView({ products }: CheckoutViewProps) {
 
   if (confirmedOrder !== null) {
     return (
-      <section aria-labelledby="confirmation-heading" className="pb-16">
-        <Card tint="green" size="lg" className="max-w-2xl p-7">
-          <h2
-            id="confirmation-heading"
-            ref={confirmationRef}
-            tabIndex={-1}
-            className="mb-3 mt-0 font-poster text-4xl font-black tracking-tight"
-          >
-            Order confirmed!
-          </h2>
-          <p className="mb-6 leading-[1.5]">
-            Thank you, {confirmedOrder.customerName}! Your simulated demo order
-            has been placed. A confirmation summary has been generated below.
-          </p>
-          <dl className="m-0">
-            <ConfirmationRow label="Order number" value={confirmedOrder.id} />
-            <ConfirmationRow label="Customer" value={confirmedOrder.email} />
-            <ConfirmationRow
-              label="Shipping to"
-              value={`${confirmedOrder.address}, ${confirmedOrder.city}`}
-            />
-            <ConfirmationRow
-              label="Shipping method"
-              value={confirmedOrder.shippingMethod}
-            />
-            <ConfirmationRow
-              label="Amount paid"
-              value={formatMoney(confirmedOrder.total)}
-            />
-            <ConfirmationRow label="Status" value="Demo completed" />
-          </dl>
-          <div className="mt-8">
-            <ButtonLink href="/" variant="secondary">
-              Continue shopping
-            </ButtonLink>
-          </div>
-        </Card>
-      </section>
+      <OrderConfirmation order={confirmedOrder} headingRef={confirmationRef} />
     );
   }
 
@@ -340,65 +200,13 @@ export function CheckoutView({ products }: CheckoutViewProps) {
         </form>
       </Card>
 
-      <aside aria-label="Order summary">
-        <Card tint="ink" size="lg" className="flex flex-col gap-4 p-6">
-          <h2 className="m-0 font-poster text-2xl font-black tracking-tight">
-            Order summary ({cart.count} items)
-          </h2>
-          <ul className="m-0 grid list-none gap-3 p-0">
-            {lines.map((line) => (
-              <li
-                key={line.product.id}
-                className="grid grid-cols-[2.5rem_minmax(0,1fr)_auto_auto] items-center gap-x-3"
-              >
-                <ProductImage
-                  src={line.product.image}
-                  size={60}
-                  sizes="2.5rem"
-                  className="aspect-square size-10 rounded-st-xs border-[1.5px] border-hairline-2 bg-[color-mix(in_srgb,var(--st-tint)_45%,var(--color-st-paper))] object-cover"
-                />
-                <span className="text-sm font-semibold leading-tight [overflow-wrap:anywhere]">
-                  {line.product.name}
-                </span>
-                <span className="font-mono text-xs text-smoke">
-                  Qty {line.qty}
-                </span>
-                <span className="text-right font-mono text-sm tabular-nums">
-                  {formatMoney(line.product.price * line.qty)}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <p className="m-0 flex flex-wrap items-baseline justify-between gap-x-4 border-t-2 border-dashed border-hairline-2 pt-4">
-            Subtotal{" "}
-            <strong className="font-mono text-[0.9375rem] tabular-nums">
-              {formatMoney(subtotal)}
-            </strong>
-          </p>
-          <p className="m-0 flex flex-wrap items-baseline justify-between gap-x-4">
-            Shipping{" "}
-            <strong className="font-mono text-[0.9375rem] tabular-nums">
-              {shippingCost === 0 ? "Free" : formatMoney(shippingCost)}
-            </strong>
-          </p>
-          <p className="m-0 flex flex-wrap items-baseline justify-between gap-x-4 border-t-2 border-line pt-4 font-bold">
-            Total{" "}
-            <strong className="font-poster text-2xl font-black tabular-nums">
-              {formatMoney(grandTotal)}
-            </strong>
-          </p>
-        </Card>
-      </aside>
-    </div>
-  );
-}
-
-// One line of the confirmation: "Order number — SB-10482"
-function ConfirmationRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex flex-wrap items-baseline justify-between gap-x-4 border-t border-on-fill/20 py-2 first:border-t-0">
-      <dt className="text-sm">{label}</dt>
-      <dd className="m-0 font-bold [overflow-wrap:anywhere]">{value}</dd>
+      <CheckoutSummary
+        lines={lines}
+        count={cart.count}
+        subtotal={subtotal}
+        shippingCost={shippingCost}
+        grandTotal={grandTotal}
+      />
     </div>
   );
 }

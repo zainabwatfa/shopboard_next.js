@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { Eyebrow } from "@/shared/components/Eyebrow";
@@ -15,6 +15,7 @@ import {
 } from "../cart.logic.ts";
 import type { CartChange, CartItem } from "../cart.types.ts";
 import { useCart } from "../hooks/useCart.ts";
+import { useCartCleanup } from "../hooks/useCartCleanup";
 import { CartItemRow } from "./CartItemRow";
 import { CartSummary } from "./CartSummary";
 
@@ -27,14 +28,10 @@ export interface CartViewProps {
 // The rows (+ / − / Remove), the summary, and Clear cart behind the Modal.
 export function CartView({ products }: CartViewProps) {
   const { state: cart, actions } = useCart();
+  useCartCleanup(products);
   const { announcement, announce } = useAnnouncer();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
-
-  // Once the products are known, drop cart items whose product no longer exists
-  useEffect(() => {
-    actions.keepOnly(products.map((product) => product.id));
-  }, [products, actions]);
 
   const lines = getCartLines(cart.items, products);
   const total = getCartTotal(cart.items, products);

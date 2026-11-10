@@ -14,7 +14,12 @@ export interface ProductImageProps {
 // Product pictures sit next to the product name, so they are decorative
 // (alt="") and screen readers don't read the name twice. next/image lazy
 // loads them and serves resized versions on Vercel.
-export function ProductImage({ src, className, size, sizes }: ProductImageProps) {
+export function ProductImage({
+  src,
+  className,
+  size,
+  sizes,
+}: ProductImageProps) {
   return (
     <Image
       className={className}

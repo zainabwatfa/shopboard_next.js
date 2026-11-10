@@ -29,7 +29,11 @@ const sortOptions: readonly SelectOption[] = [
 
 // The shop's search box, category filter and sort. The selects give plain
 // text, so parseCategory / parseSortKey (products.logic.ts) check it.
-export function ShopFilters({ filters, onChange, searchRef }: ShopFiltersProps) {
+export function ShopFilters({
+  filters,
+  onChange,
+  searchRef,
+}: ShopFiltersProps) {
   return (
     <div
       role="search"

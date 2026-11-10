@@ -1,0 +1,21 @@
+# Build output and lockfile
+.next
+next-env.d.ts
+package-lock.json
+
+# Copied files: byte-identical with the React version, never reformatted
+# (checked with cmp; see CLAUDE.md "Day 3 files are copied, not edited")
+src/features/cart/cart.logic.ts
+src/features/cart/cart.state.ts
+src/features/cart/cart.types.ts
+src/features/products/products.api.ts
+src/features/products/products.logic.ts
+src/features/products/products.types.ts
+src/features/products/hero.ts
+src/features/theme/theme.logic.ts
+src/features/theme/theme.state.ts
+src/features/theme/theme.types.ts
+src/features/checkout/checkout.schema.ts
+src/shared/api/client.ts
+src/lib/messages.ts
+src/lib/format.ts

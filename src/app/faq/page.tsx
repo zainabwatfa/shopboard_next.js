@@ -58,12 +58,12 @@ export default function FaqPage() {
 
         <FaqItem question="How does the cart work across pages and survive a refresh?">
           <p>
-            The cart is managed by a top-level <InlineCode>CartProvider</InlineCode>{" "}
-            that persists item identifiers and quantities to{" "}
-            <InlineCode>localStorage</InlineCode>. When you reload the page or
-            navigate between routes, the cart state is immediately restored.
-            Multi-tab synchronization is handled via the browser&apos;s{" "}
-            <InlineCode>storage</InlineCode> event.
+            The cart is managed by a top-level{" "}
+            <InlineCode>CartProvider</InlineCode> that persists item identifiers
+            and quantities to <InlineCode>localStorage</InlineCode>. When you
+            reload the page or navigate between routes, the cart state is
+            immediately restored. Multi-tab synchronization is handled via the
+            browser&apos;s <InlineCode>storage</InlineCode> event.
           </p>
         </FaqItem>
 
@@ -97,8 +97,9 @@ export default function FaqPage() {
         </FaqItem>
 
         <p className="mt-8">
-          Have more questions? Head back to the <TextLink href="/">shop</TextLink>{" "}
-          or check out your <TextLink href="/cart">cart</TextLink>.
+          Have more questions? Head back to the{" "}
+          <TextLink href="/">shop</TextLink> or check out your{" "}
+          <TextLink href="/cart">cart</TextLink>.
         </p>
       </section>
     </>

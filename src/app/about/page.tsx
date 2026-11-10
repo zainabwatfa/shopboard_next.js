@@ -41,10 +41,11 @@ export default function AboutPage() {
         </p>
         <ul className="mb-5 list-disc pl-6 marker:text-accent [&_li+li]:mt-2">
           <li>
-            <strong>Strict Type Safety:</strong> Zero <InlineCode>any</InlineCode>,
-            zero type assertions (<InlineCode>as</InlineCode>), and zero
-            non-null assertions (<InlineCode>!</InlineCode>). All external data
-            is guarded with runtime type guards.
+            <strong>Strict Type Safety:</strong> Zero{" "}
+            <InlineCode>any</InlineCode>, zero type assertions (
+            <InlineCode>as</InlineCode>), and zero non-null assertions (
+            <InlineCode>!</InlineCode>). All external data is guarded with
+            runtime type guards.
           </li>
           <li>
             <strong>Shared Layout &amp; Unified Cart:</strong> A single,

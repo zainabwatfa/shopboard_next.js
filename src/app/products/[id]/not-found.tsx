@@ -9,8 +9,8 @@ export default function ProductNotFound() {
         Product not found
       </h1>
       <p className="m-0 mb-2 max-w-md text-smoke">
-        We couldn&rsquo;t find the product you&rsquo;re looking for. It may
-        have been removed or the link might be broken.
+        We couldn&rsquo;t find the product you&rsquo;re looking for. It may have
+        been removed or the link might be broken.
       </p>
       <ButtonLink href="/">Browse products</ButtonLink>
     </div>

@@ -1,0 +1,11 @@
+# Every text file is stored and checked out with LF line endings, on every
+# machine. Without this, a Windows checkout (core.autocrlf=true) converts
+# files to CRLF and `prettier --check` fails on the whole repo — an
+# environment artifact, not a style problem (it bit the React version).
+* text=auto eol=lf
+
+# Binary files, never converted
+*.png binary
+*.webp binary
+*.ico binary
+*.woff2 binary

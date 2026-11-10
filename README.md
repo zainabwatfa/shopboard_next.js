@@ -12,26 +12,31 @@ Deployed on Vercel (link added after the first deploy).
 ## Scripts
 
 ```bash
-npm run dev    # http://localhost:3000
-npm run lint   # eslint
-npm run build  # production build, includes type checking
-npm run start  # serve the production build
+npm run dev           # http://localhost:3000
+npm run lint          # eslint
+npm run build         # production build, includes type checking
+npm run format        # prettier --write (the copied files are in .prettierignore)
+npm run format:check  # prettier --check
+npm run start         # serve the production build
 ```
+
+`.gitattributes` keeps every text file LF on every machine, so `format:check`
+passes on a fresh Windows checkout too.
 
 Optional: set `NEXT_PUBLIC_API_BASE_URL` (see `.env.example`) to load the products from
 another server. Without it, the site reads its own `public/api/products.json`.
 
 ## Routes
 
-| Route            | File                          | What it shows                                                        |
-| ---------------- | ----------------------------- | -------------------------------------------------------------------- |
-| `/`              | `app/page.tsx`                | Hero, search, category filter, sort (kept in the URL), product cards |
-| `/products/[id]` | `app/products/[id]/page.tsx`  | One product and related items; unknown id → "Product not found"      |
-| `/cart`          | `app/cart/page.tsx`           | Cart rows (+ / − / Remove), summary, Clear cart behind the Modal     |
-| `/checkout`      | `app/checkout/page.tsx`       | Simulated checkout (react-hook-form + Zod), order summary            |
-| `/about`         | `app/about/page.tsx`          | About the demo                                                       |
-| `/faq`           | `app/faq/page.tsx`            | Frequently asked questions                                           |
-| anything else    | `app/not-found.tsx`           | 404                                                                  |
+| Route            | File                         | What it shows                                                        |
+| ---------------- | ---------------------------- | -------------------------------------------------------------------- |
+| `/`              | `app/page.tsx`               | Hero, search, category filter, sort (kept in the URL), product cards |
+| `/products/[id]` | `app/products/[id]/page.tsx` | One product and related items; unknown id → "Product not found"      |
+| `/cart`          | `app/cart/page.tsx`          | Cart rows (+ / − / Remove), summary, Clear cart behind the Modal     |
+| `/checkout`      | `app/checkout/page.tsx`      | Simulated checkout (react-hook-form + Zod), order summary            |
+| `/about`         | `app/about/page.tsx`         | About the demo                                                       |
+| `/faq`           | `app/faq/page.tsx`           | Frequently asked questions                                           |
+| anything else    | `app/not-found.tsx`          | 404                                                                  |
 
 Every page is a Server Component; `loading.tsx` files show the loading lines,
 `error.tsx` files show the error card with **Try again**, and `/product/:id` (the old
@@ -108,10 +113,16 @@ CartPage (app/cart/page.tsx, server: products)
 CheckoutPage (app/checkout/page.tsx, server: products + demo notice)
 └─ CheckoutView (products)                     owns: form values/errors (react-hook-form),
    │                                           confirmedOrder, orderCounter
-   ├─ TextField (label, error, registration) ×7 → Input
-   ├─ SelectInput (label, description, registration, options) ×2
-   ├─ Card (form, summary, confirmation), Button, ButtonLink, ProductImage
-   └─ ConfirmationRow (label, value) ×6
+   ├─ TextField (label, error, registration) ×7 → Input        (CheckoutFields)
+   ├─ SelectInput (label, description, registration, options) ×2 (CheckoutFields)
+   ├─ Card (the form), Button (submit), ButtonLink (empty state)
+   ├─ CheckoutSummary (lines, count, subtotal, shippingCost, grandTotal)
+   │  → Card, ProductImage
+   └─ OrderConfirmation (order, headingRef) → Card, ButtonLink
+      └─ ConfirmationRow (label, value) ×6
+
+ShopView, CartView and CheckoutView all call useCartCleanup(products): once the
+products are known, saved cart items whose product no longer exists are dropped.
 
 AboutPage / FaqPage (server, static) → Eyebrow, TextLink, InlineCode, FaqItem (FAQ only)
 not-found.tsx, products/[id]/not-found.tsx → Eyebrow / ButtonLink
@@ -120,16 +131,16 @@ error.tsx, cart/error.tsx → StatusMessage; loading.tsx per segment
 
 ## Who owns which state
 
-| State                     | Owner                        | Saved where                               |
-| ------------------------- | ---------------------------- | ----------------------------------------- |
-| Cart items `[{id, qty}]`  | CartProvider (store glue)    | `localStorage` `shopboard-cart` — written only by `cart.state.ts` |
-| Theme choice              | useTheme (store glue)        | `localStorage` `shopboard-theme` — written only by `theme.state.ts` |
-| Shop filters (q/cat/sort) | ShopView                     | the URL query string (`history.replaceState`) |
-| Toast message             | ShopView / ProductView       | memory (useToast)                         |
-| Cart announcer text       | CartView                     | memory (useAnnouncer)                     |
-| Clear-cart modal open     | CartView                     | memory                                    |
-| Form values and errors    | CheckoutView (react-hook-form) | memory                                  |
-| Confirmed order           | CheckoutView                 | memory                                    |
+| State                     | Owner                          | Saved where                                                         |
+| ------------------------- | ------------------------------ | ------------------------------------------------------------------- |
+| Cart items `[{id, qty}]`  | CartProvider (store glue)      | `localStorage` `shopboard-cart` — written only by `cart.state.ts`   |
+| Theme choice              | useTheme (store glue)          | `localStorage` `shopboard-theme` — written only by `theme.state.ts` |
+| Shop filters (q/cat/sort) | ShopView                       | the URL query string (`history.replaceState`)                       |
+| Toast message             | ShopView / ProductView         | memory (useToast)                                                   |
+| Cart announcer text       | CartView                       | memory (useAnnouncer)                                               |
+| Clear-cart modal open     | CartView                       | memory                                                              |
+| Form values and errors    | CheckoutView (react-hook-form) | memory                                                              |
+| Confirmed order           | CheckoutView                   | memory                                                              |
 
 Prices always come from the product data; the saved cart holds only ids and quantities.
 
