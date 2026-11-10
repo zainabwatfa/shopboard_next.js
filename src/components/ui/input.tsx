@@ -7,10 +7,13 @@ import { cn } from "@/lib/cn";
 
 type InputProps = ComponentProps<"input">;
 
-/* The field look, shared with SelectField so the <select> matches without
-   copying classes. */
+/* The field look and its lavender focus, shared with SelectField so the
+   <select> matches without copying classes. */
 export const fieldControlClasses =
   "min-h-12 w-full appearance-none rounded-input border-2 border-line bg-card px-4 py-3 font-sans text-base text-ink";
+
+export const fieldFocusClasses =
+  "focus-visible:shadow-[4px_4px_0_var(--color-st-lav-shade)] focus-visible:outline-3 focus-visible:outline-transparent";
 
 export function Input({ className, ...props }: InputProps) {
   return (
@@ -18,7 +21,7 @@ export function Input({ className, ...props }: InputProps) {
       className={cn(
         fieldControlClasses,
         "placeholder:text-ash placeholder:opacity-100",
-        "focus-visible:shadow-[4px_4px_0_var(--color-st-lav-shade)] focus-visible:outline-3 focus-visible:outline-transparent",
+        fieldFocusClasses,
         "aria-invalid:border-down aria-invalid:shadow-[3px_3px_0_var(--color-down)]",
         "motion-safe:transition-[transform,box-shadow] motion-safe:duration-150 motion-safe:ease-st motion-safe:focus-visible:-translate-x-px motion-safe:focus-visible:-translate-y-px",
         className,

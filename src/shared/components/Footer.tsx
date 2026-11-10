@@ -11,7 +11,7 @@ export function Footer({ groups }: FooterProps) {
   return (
     <footer className="py-12 pb-10">
       <div className="mx-auto w-full max-w-7xl px-5">
-        <div className="grid gap-8 rounded-[32px] border-2 border-line bg-panel p-7 text-on-panel shadow-[8px_8px_0_var(--color-st-lav-shade)] [&_:focus-visible]:outline-st-lav lg:grid-cols-[1fr_2fr]">
+        <div className="grid gap-8 rounded-st-lg border-2 border-line bg-panel p-7 text-on-panel shadow-[8px_8px_0_var(--color-st-lav-shade)] [&_:focus-visible]:outline-st-lav lg:grid-cols-[1fr_2fr]">
           <p className="m-0 font-poster text-4xl font-black tracking-tight">
             ShopBoard
           </p>

@@ -38,6 +38,18 @@ export function ShopView({ products, initialFilters }: ShopViewProps) {
   const { toast, showToast, dismissToast } = useToast();
   const searchRef = useRef<HTMLInputElement>(null);
 
+  // useState reads initialFilters only on the first render; after that the
+  // two live apart on purpose (typing must not wait for the server). But a
+  // NAVIGATION to the shop (the Shop nav link, a hero link) brings new
+  // initialFilters from the server, and the list must follow them — this is
+  // React's "adjusting state when a prop changes" pattern: compare during
+  // render, set state, and React restarts the render before touching the DOM.
+  const [syncedWith, setSyncedWith] = useState<Filters>(initialFilters);
+  if (syncedWith !== initialFilters) {
+    setSyncedWith(initialFilters);
+    setFilters(initialFilters);
+  }
+
   // Once the products are known, drop cart items whose product no longer exists
   useEffect(() => {
     actions.keepOnly(products.map((product) => product.id));

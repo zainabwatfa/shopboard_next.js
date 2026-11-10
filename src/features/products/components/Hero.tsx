@@ -88,6 +88,7 @@ export function Hero({ tiles, productCount, onPick }: HeroProps) {
                 alt=""
                 width={200}
                 height={200}
+                sizes="(min-width: 640px) 20rem, 60vw"
                 className="h-full w-full rounded-st-xs object-contain"
               />
               <span className="sr-only">{tile.name}</span>

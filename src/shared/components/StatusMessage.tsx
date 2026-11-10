@@ -43,7 +43,12 @@ export function StatusMessage({
     const line = lineRef.current;
     if (message !== "" || !line || document.activeElement !== line) return;
     const heading = line.closest("main")?.querySelector("h1");
-    if (heading instanceof HTMLElement) heading.focus();
+    if (heading instanceof HTMLElement) {
+      // A plain h1 is not focusable and focus() would be a silent no-op, so
+      // make it focusable by script first (tabIndex -1: focusable, not tabbable)
+      heading.tabIndex = -1;
+      heading.focus();
+    }
   }, [message]);
 
   // The button disappears once it did its job, and focus would be lost with

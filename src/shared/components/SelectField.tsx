@@ -1,4 +1,4 @@
-import { fieldControlClasses } from "@/components/ui/input";
+import { fieldControlClasses, fieldFocusClasses } from "@/components/ui/input";
 import { cn } from "@/lib/cn";
 
 export type SelectOption = {
@@ -37,7 +37,7 @@ export function SelectField({
         className={cn(
           fieldControlClasses,
           "cursor-pointer pr-11 bg-[linear-gradient(45deg,transparent_50%,currentColor_50%),linear-gradient(135deg,currentColor_50%,transparent_50%)] bg-position-[calc(100%_-_1.375rem)_52%,calc(100%_-_1rem)_52%] bg-size-[0.375rem_0.375rem] bg-no-repeat",
-          "focus-visible:shadow-[4px_4px_0_var(--color-st-lav-shade)] focus-visible:outline-3 focus-visible:outline-transparent",
+          fieldFocusClasses,
         )}
       >
         {options.map((option) => (

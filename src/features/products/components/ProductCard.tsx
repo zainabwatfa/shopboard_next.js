@@ -28,11 +28,12 @@ export function ProductCard({ product, position, onAdd }: ProductCardProps) {
       <Link
         href={`/products/${product.id}`}
         aria-label={product.name}
-        className="block aspect-square overflow-hidden rounded-[10px] border-[1.5px] border-hairline-2 bg-[color-mix(in_srgb,var(--st-tint)_45%,var(--color-st-paper))]"
+        className="block aspect-square overflow-hidden rounded-well border-[1.5px] border-hairline-2 bg-[color-mix(in_srgb,var(--st-tint)_45%,var(--color-st-paper))]"
       >
         <ProductImage
           src={product.image}
           size={200}
+          sizes="(min-width: 640px) 18rem, 50vw"
           className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-400 motion-safe:group-hover:scale-105"
         />
       </Link>

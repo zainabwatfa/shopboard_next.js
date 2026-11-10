@@ -19,6 +19,7 @@ export function ProductDetail({ product, onAdd }: ProductDetailProps) {
         <ProductImage
           src={product.image}
           size={400}
+          sizes="(min-width: 768px) 34rem, 100vw"
           className="h-full w-full object-cover"
         />
       </div>

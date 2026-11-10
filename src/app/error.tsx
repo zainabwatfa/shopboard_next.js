@@ -1,9 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { StatusMessage } from "@/shared/components/StatusMessage";
 import { getLoadErrorMessage } from "@/lib/messages.ts";
 
 export interface ErrorPageProps {
+  // An error thrown in a Server Component arrives here serialized as a plain
+  // Error (and redacted in production), so getLoadErrorMessage's ApiError
+  // branches can't fire across this boundary: the generic message shows.
   error: Error & { digest?: string };
   // Next.js gives this: it renders the page again, so a failed load can retry
   // without a full reload
@@ -12,19 +15,17 @@ export interface ErrorPageProps {
 
 // Shown by Next.js when a page throws while rendering (e.g. the products
 // could not be read). The header and footer stay on screen; only the page's
-// content is replaced by this card.
+// content is replaced by the error card — the same StatusMessage card the
+// pages use for their own error states.
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   return (
-    <div className="my-10 flex flex-col items-center gap-5 rounded-st-sm border-2 border-down bg-[color-mix(in_srgb,var(--color-st-pink)_22%,var(--color-card))] px-6 py-8 text-center">
-      <p
-        aria-live="polite"
-        className="m-0 font-sans text-[1.0625rem] font-bold leading-[1.45] text-ink"
-      >
-        {getLoadErrorMessage(error)}
-      </p>
-      <Button variant="secondary" size="sm" onClick={reset}>
-        Try again
-      </Button>
+    <div className="pt-10">
+      <StatusMessage
+        id="page-error"
+        tone="error"
+        message={getLoadErrorMessage(error)}
+        action={{ label: "Try again", onClick: reset }}
+      />
     </div>
   );
 }

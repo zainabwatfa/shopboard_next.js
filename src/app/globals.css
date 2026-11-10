@@ -106,10 +106,12 @@
   --color-st-paper: #fff8f8;
 
   /* Geometry */
+  --radius-st-lg: 32px;
   --radius-st: 28px;
   --radius-st-sm: 18px;
   --radius-st-xs: 12px;
   --radius-input: 14px;
+  --radius-well: 10px;
 
   /* Flat offset sticker shadows (no blur). --st-shade resolves on the element,
      so a card's tint variant decides the shadow colour. */
