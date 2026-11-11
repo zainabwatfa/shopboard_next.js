@@ -17,6 +17,9 @@ npm run lint          # eslint
 npm run build         # production build, includes type checking
 npm run format        # prettier --write (the copied files are in .prettierignore)
 npm run format:check  # prettier --check
+npm run test          # vitest: tests/unit + tests/component (jsdom)
+npm run test:watch    # vitest, rerunning on every save
+npm run test:e2e      # playwright: tests/e2e (starts the dev server itself)
 npm run start         # serve the production build
 ```
 

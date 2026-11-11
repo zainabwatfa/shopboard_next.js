@@ -60,5 +60,13 @@ and typed props, used everywhere and never copied; tokens in `@theme`; deployed 
 `npm run dev` (http://localhost:3000), `npm run lint`, `npm run build` (includes type
 checking), `npm run format:check` (Prettier; the copied files are in `.prettierignore`,
 so a formatter never touches them — check with `cmp`/`git diff` after formatting).
-Run lint, build and format:check after every change. `.gitattributes` forces LF
-everywhere, so format:check also passes on a fresh Windows checkout.
+`npm run test` runs the Vitest unit and component tests (tests/unit, tests/component;
+jsdom, config in vitest.config.mts); `npm run test:e2e` runs the Playwright journeys
+(tests/e2e; it starts the dev server itself). Run lint, build, format:check and test
+after every change; run test:e2e after a change to a page or a flow. E2E locators are
+scoped (a role or an aria-labelled region), never a bare getByText: names like the
+product's repeat across the page, the toast and the live regions, and Playwright's
+strict mode rejects ambiguous matches.
+
+`.gitattributes` forces LF everywhere, so format:check also passes on a fresh
+Windows checkout.
