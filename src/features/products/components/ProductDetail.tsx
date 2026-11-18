@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { WishlistButton } from "@/features/wishlist/components/WishlistButton";
 import { formatMoney } from "@/lib/format.ts";
 import { Eyebrow } from "@/shared/components/Eyebrow";
 import type { Product } from "../products.types.ts";
@@ -10,8 +11,8 @@ export interface ProductDetailProps {
 }
 
 // Product detail view: large media sticker, category eyebrow, title,
-// formatted price, and Add to cart. Picture first on phones, side by side
-// from md.
+// formatted price, Add to cart and Add to wishlist. Picture first on phones,
+// side by side from md.
 export function ProductDetail({ product, onAdd }: ProductDetailProps) {
   return (
     <article className="grid items-center gap-8 pb-4 pt-2 md:grid-cols-2">
@@ -40,6 +41,11 @@ export function ProductDetail({ product, onAdd }: ProductDetailProps) {
         >
           Add to cart
         </Button>
+        <WishlistButton
+          product={product}
+          display="labelled"
+          className="mt-2 w-full"
+        />
       </div>
     </article>
   );

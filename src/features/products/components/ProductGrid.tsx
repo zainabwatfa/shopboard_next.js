@@ -4,11 +4,17 @@ import { ProductCard } from "./ProductCard";
 export interface ProductGridProps {
   products: readonly Product[];
   onAdd: (product: Product) => void;
+  // Passed on to every card's heart; only the wishlist page needs it
+  onWishlistChange?: (product: Product, onWishlist: boolean) => void;
 }
 
 // The cards, in the order given. The key is the product id, so a card keeps
 // its place (and its focused button) when the list is filtered or sorted.
-export function ProductGrid({ products, onAdd }: ProductGridProps) {
+export function ProductGrid({
+  products,
+  onAdd,
+  onWishlistChange,
+}: ProductGridProps) {
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,9.5rem),1fr))] gap-5 gap-x-4 sm:grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] sm:gap-8 sm:gap-x-6">
       {products.map((product, position) => (
@@ -17,6 +23,7 @@ export function ProductGrid({ products, onAdd }: ProductGridProps) {
           product={product}
           position={position}
           onAdd={onAdd}
+          onWishlistChange={onWishlistChange}
         />
       ))}
     </div>

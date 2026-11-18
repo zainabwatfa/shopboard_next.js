@@ -8,6 +8,7 @@ import { useToast } from "@/shared/hooks/useToast.ts";
 import { useCart } from "@/features/cart/hooks/useCart.ts";
 import { useCartCleanup } from "@/features/cart/hooks/useCartCleanup";
 import { getItemQty } from "@/features/cart/cart.logic.ts";
+import { useWishlistCleanup } from "@/features/wishlist/hooks/useWishlistCleanup.ts";
 import { getAddedMessage, getResultsStatus } from "@/lib/messages.ts";
 import { HERO_TILES } from "../hero.ts";
 import type { HeroTile } from "../hero.ts";
@@ -36,6 +37,7 @@ export interface ShopViewProps {
 export function ShopView({ products, initialFilters }: ShopViewProps) {
   const { actions } = useCart();
   useCartCleanup(products);
+  useWishlistCleanup(products);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const { toast, showToast, dismissToast } = useToast();
   const searchRef = useRef<HTMLInputElement>(null);

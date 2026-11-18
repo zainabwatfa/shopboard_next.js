@@ -20,6 +20,7 @@ export const FOOTER_GROUPS: readonly LinkGroup[] = [
     heading: "Shop",
     links: [
       { href: "/", label: "All products" },
+      { href: "/wishlist", label: "Wishlist" },
       { href: "/cart", label: "Cart" },
     ],
   },

@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
+import { EmptyState } from "@/shared/components/EmptyState";
 import { Eyebrow } from "@/shared/components/Eyebrow";
 import { useAnnouncer } from "@/shared/hooks/useAnnouncer.ts";
 import { describeCartChange } from "@/lib/messages.ts";
@@ -108,10 +109,9 @@ export function CartView({ products }: CartViewProps) {
       </p>
 
       {lines.length === 0 ? (
-        <div className="mb-16 mt-6 flex flex-col items-center gap-3 rounded-st-sm border-2 border-dashed border-hairline-2 bg-surface px-6 py-10 text-center text-smoke">
-          <p className="m-0 text-lg font-bold text-ink">Your cart is empty.</p>
+        <EmptyState message="Your cart is empty.">
           <ButtonLink href="/">Browse the shop</ButtonLink>
-        </div>
+        </EmptyState>
       ) : (
         <div className="mb-16 mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)]">
           <ul className="m-0 grid gap-5 p-0" aria-labelledby="cart-title">
