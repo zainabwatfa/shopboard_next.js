@@ -7,7 +7,9 @@ checkout is simulated (it validates a form, clears the cart and shows a confirma
 Earlier versions: [shopboard](https://github.com/zainabwatfa/shopboard) (plain TypeScript)
 and the React + Vite version this one is ported from.
 
-Deployed on Vercel (link added after the first deploy).
+![The ShopBoard shop page: the header with the Wishlist and Cart counts, and the hero](docs/screenshot.png)
+
+There is no live deployment yet: run it locally with `npm install` and `npm run dev`.
 
 ## Scripts
 
