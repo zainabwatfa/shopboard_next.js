@@ -13,6 +13,7 @@ Deployed on Vercel (link added after the first deploy).
 
 ```bash
 npm run dev           # http://localhost:3000
+npm run typecheck     # tsc --noEmit
 npm run lint          # eslint
 npm run build         # production build, includes type checking
 npm run format        # prettier --write (the copied files are in .prettierignore)
@@ -65,7 +66,11 @@ build time (`generateStaticParams`).
   the layout applies the saved choice before the first paint (no flash).
 - **components/ui** — Button (+ ButtonLink), Input, Card, Badge, Modal: union-typed
   variant props backed by `Record` maps, used everywhere, never copied.
-- **UI rules** — in [CLAUDE.md](CLAUDE.md).
+- **UI rules** — in [CLAUDE.md](CLAUDE.md); the look they protect is described in
+  [DESIGN.md](DESIGN.md).
+- **CI** — [.github/workflows/ci.yml](.github/workflows/ci.yml) runs typecheck, lint,
+  format check, the Vitest tests and the build on every push and pull request, and the
+  Playwright journeys in a second job.
 
 ## Component tree
 

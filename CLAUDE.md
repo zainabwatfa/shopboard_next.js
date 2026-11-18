@@ -12,6 +12,9 @@ and typed props, used everywhere and never copied; tokens in `@theme`; deployed 
 
 ## UI rules
 
+The look itself (sticker pairs, type, shape, motion, what each token is for) is described
+in [DESIGN.md](DESIGN.md). Read it before drawing anything new.
+
 1. **Tailwind only.** `src/app/globals.css` is the only CSS file. No new `.css` files, no
    `style={{ … }}` objects. A CSS variable on an element is set with a Tailwind arbitrary
    property (`[--st-tint:var(--color-st-lav)]`), not inline style.
@@ -57,8 +60,8 @@ and typed props, used everywhere and never copied; tokens in `@theme`; deployed 
 
 ## Scripts
 
-`npm run dev` (http://localhost:3000), `npm run lint`, `npm run build` (includes type
-checking), `npm run format:check` (Prettier; the copied files are in `.prettierignore`,
+`npm run dev` (http://localhost:3000), `npm run typecheck` (`tsc --noEmit`),
+`npm run lint`, `npm run build` (also type checks), `npm run format:check` (Prettier; the copied files are in `.prettierignore`,
 so a formatter never touches them — check with `cmp`/`git diff` after formatting).
 `npm run test` runs the Vitest unit and component tests (tests/unit, tests/component;
 jsdom, config in vitest.config.mts); `npm run test:e2e` runs the Playwright journeys
@@ -67,6 +70,10 @@ after every change; run test:e2e after a change to a page or a flow. E2E locator
 scoped (a role or an aria-labelled region), never a bare getByText: names like the
 product's repeat across the page, the toast and the live regions, and Playwright's
 strict mode rejects ambiguous matches.
+
+CI (`.github/workflows/ci.yml`) runs the same checks on every push to `main` and every
+pull request: typecheck, lint, format:check, test and build in one job, test:e2e in a
+second one.
 
 `.gitattributes` forces LF everywhere, so format:check also passes on a fresh
 Windows checkout.
