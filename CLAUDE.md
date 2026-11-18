@@ -60,7 +60,7 @@ in [DESIGN.md](DESIGN.md). Read it before drawing anything new.
 
 ## Scripts
 
-`npm run dev` (http://localhost:3000), `npm run typecheck` (`tsc --noEmit`),
+`npm run dev` (http://localhost:3000), `npm run typecheck` (`next typegen`, then `tsc --noEmit`),
 `npm run lint`, `npm run build` (also type checks), `npm run format:check` (Prettier; the copied files are in `.prettierignore`,
 so a formatter never touches them — check with `cmp`/`git diff` after formatting).
 `npm run test` runs the Vitest unit and component tests (tests/unit, tests/component;

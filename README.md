@@ -13,7 +13,7 @@ Deployed on Vercel (link added after the first deploy).
 
 ```bash
 npm run dev           # http://localhost:3000
-npm run typecheck     # tsc --noEmit
+npm run typecheck     # next typegen + tsc --noEmit
 npm run lint          # eslint
 npm run build         # production build, includes type checking
 npm run format        # prettier --write (the copied files are in .prettierignore)
