@@ -37,6 +37,7 @@ another server. Without it, the site reads its own `public/api/products.json`.
 | `/`              | `app/page.tsx`               | Hero, search, category filter, sort (kept in the URL), product cards |
 | `/products/[id]` | `app/products/[id]/page.tsx` | One product and related items; unknown id → "Product not found"      |
 | `/cart`          | `app/cart/page.tsx`          | Cart rows (+ / − / Remove), summary, Clear cart behind the Modal     |
+| `/wishlist`      | `app/wishlist/page.tsx`      | The products marked with the heart, newest first; add to cart        |
 | `/checkout`      | `app/checkout/page.tsx`      | Simulated checkout (react-hook-form + Zod), order summary            |
 | `/about`         | `app/about/page.tsx`         | About the demo                                                       |
 | `/faq`           | `app/faq/page.tsx`           | Frequently asked questions                                           |
@@ -68,6 +69,11 @@ build time (`generateStaticParams`).
   variant props backed by `Record` maps, used everywhere, never copied.
 - **UI rules** — in [CLAUDE.md](CLAUDE.md); the look they protect is described in
   [DESIGN.md](DESIGN.md).
+- **Spec-driven feature** — the wishlist was built with
+  [Spec Kit](https://github.com/github/spec-kit): its specification, plan and task list
+  are in [specs/001-wishlist/](specs/001-wishlist/), checked against the project's
+  [constitution](.specify/memory/constitution.md). Its module,
+  `src/features/wishlist/`, is new code in the same shape as the cart's.
 - **CI** — [.github/workflows/ci.yml](.github/workflows/ci.yml) runs typecheck, lint,
   format check, the Vitest tests and the build on every push and pull request, and the
   Playwright journeys in a second job.
@@ -84,8 +90,9 @@ RootLayout (app/layout.tsx)                    theme pre-paint <script>
    │                                           over cart.state.ts + localStorage)
    ├─ skip link <a>
    ├─ Header
-   │  ├─ MainNav                               reads: pathname, cart count
-   │  │  └─ NavLink ×4 (Cart has Badge)
+   │  ├─ MainNav                               reads: pathname, cart count,
+   │  │  │                                     wishlist count (useWishlist)
+   │  │  └─ NavLink ×5 (Wishlist and Cart have a Badge)
    │  └─ ThemeSwitch                           owns: theme choice (useTheme →
    │                                           useSyncExternalStore over theme.state.ts)
    ├─ <main> … the page …
@@ -100,13 +107,14 @@ ShopPage (app/page.tsx, server: products + URL filters)
    │  └─ SelectField ×2
    ├─ StatusMessage (id, tone, message, action?)
    ├─ ProductGrid (products, onAdd)
-   │  └─ ProductCard (product, position, onAdd) → Card, ProductImage, Button
+   │  └─ ProductCard (product, position, onAdd) → Card, ProductImage, Button,
+   │     WishlistButton (owns nothing: reads and toggles through useWishlist)
    └─ Toast (toast, onDismiss) → ButtonLink, Button
 
 ProductPage (app/products/[id]/page.tsx, server: product + related, notFound())
 ├─ ButtonLink (back to shop)
 └─ ProductView (product, related)              owns: toast
-   ├─ ProductDetail (product, onAdd) → Eyebrow, ProductImage, Button
+   ├─ ProductDetail (product, onAdd) → Eyebrow, ProductImage, Button, WishlistButton
    ├─ ProductGrid → ProductCard …
    └─ Toast
 
@@ -117,6 +125,13 @@ CartPage (app/cart/page.tsx, server: products)
    │  → Card, ProductImage, QuantityStepper (Button ×2), Button (Remove)
    ├─ CartSummary (count, total, onClear) → Card, ButtonLink ×2, Button
    └─ Modal (open, onClose, title) → Button ×2
+
+WishlistPage (app/wishlist/page.tsx, server: products)
+└─ WishlistView (products)                     owns: toast, announcer
+   ├─ Eyebrow, announcer <p role=status>
+   ├─ ProductGrid (products, onAdd, onWishlistChange) → ProductCard …
+   ├─ EmptyState → ButtonLink
+   └─ Toast
 
 CheckoutPage (app/checkout/page.tsx, server: products + demo notice)
 └─ CheckoutView (products)                     owns: form values/errors (react-hook-form),
@@ -131,6 +146,7 @@ CheckoutPage (app/checkout/page.tsx, server: products + demo notice)
 
 ShopView, CartView and CheckoutView all call useCartCleanup(products): once the
 products are known, saved cart items whose product no longer exists are dropped.
+ShopView and WishlistView do the same for the wishlist with useWishlistCleanup(products).
 
 AboutPage / FaqPage (server, static) → Eyebrow, TextLink, InlineCode, FaqItem (FAQ only)
 not-found.tsx, products/[id]/not-found.tsx → Eyebrow / ButtonLink
@@ -143,14 +159,16 @@ error.tsx, cart/error.tsx → StatusMessage; loading.tsx per segment
 | ------------------------- | ------------------------------ | ------------------------------------------------------------------- |
 | Cart items `[{id, qty}]`  | CartProvider (store glue)      | `localStorage` `shopboard-cart` — written only by `cart.state.ts`   |
 | Theme choice              | useTheme (store glue)          | `localStorage` `shopboard-theme` — written only by `theme.state.ts` |
+| Wishlist ids `[id, …]`    | useWishlist (store glue)       | `localStorage` `shopboard-wishlist` — only by `wishlist.state.ts`   |
 | Shop filters (q/cat/sort) | ShopView                       | the URL query string (`history.replaceState`)                       |
-| Toast message             | ShopView / ProductView         | memory (useToast)                                                   |
-| Cart announcer text       | CartView                       | memory (useAnnouncer)                                               |
+| Toast message             | Shop / Product / WishlistView  | memory (useToast)                                                   |
+| Announcer text            | CartView, WishlistView         | memory (useAnnouncer)                                               |
 | Clear-cart modal open     | CartView                       | memory                                                              |
 | Form values and errors    | CheckoutView (react-hook-form) | memory                                                              |
 | Confirmed order           | CheckoutView                   | memory                                                              |
 
-Prices always come from the product data; the saved cart holds only ids and quantities.
+Prices always come from the product data; the saved cart holds only ids and quantities,
+and the saved wishlist only ids.
 
 ## Pictures
 

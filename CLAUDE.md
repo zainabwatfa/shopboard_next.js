@@ -51,12 +51,25 @@ in [DESIGN.md](DESIGN.md). Read it before drawing anything new.
    cart with a link to the shop, "Product not found".
 5. **No React warnings in the Console.** Check in the browser after a change.
 6. Only the cart state module writes the cart (localStorage, `[{ id, qty }]`); prices always
-   come from the product data. Only the theme state module saves the theme choice.
+   come from the product data. Only the theme state module saves the theme choice. Only
+   the wishlist state module writes the wishlist (localStorage, `[id, …]`).
 7. Keep the accessibility the first site had: labelled controls, polite live regions for
    status lines and the toast, a confirm (the Modal) before Clear cart, focus management
    when a cart row disappears, visually hidden "Quantity" text.
 8. Content stays true: it is a demo for a course. No invented company, address, people or
    policies.
+
+## New features: Spec Kit
+
+A new feature is specified before it is built: `spec.md` (what and why), `plan.md` (how,
+checked against `.specify/memory/constitution.md`) and `tasks.md`, in
+`specs/<number>-<name>/`. The `/speckit-*` skills in `.claude/skills/` drive each step.
+The first one is the wishlist: `specs/001-wishlist/`, code in `src/features/wishlist/`
+(written here, not copied: these files may be edited). The constitution and this file
+must agree; change both together.
+
+Test files (`tests/`) are written and changed by the author only. Run them, propose cases
+in `tasks.md`, never create or edit a test file.
 
 ## Scripts
 

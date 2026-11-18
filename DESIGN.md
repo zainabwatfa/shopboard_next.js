@@ -122,6 +122,7 @@ fields are 48px tall (`min-h-12`); the small and icon buttons are 36px.
 ## Accessibility is part of the design
 
 - Focus is always visible: a 3px `accent` outline, 3px away from the element.
-- Colour is never the only signal: an invalid field also shows its error text.
+- Colour is never the only signal: an invalid field also shows its error text, and the
+  wishlist heart is outlined when off and filled when on (as well as turning pink).
 - Status lines and the toast are polite live regions.
 - Clear cart asks first, in the Modal.
