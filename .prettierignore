@@ -19,3 +19,8 @@ src/features/checkout/checkout.schema.ts
 src/shared/api/client.ts
 src/lib/messages.ts
 src/lib/format.ts
+
+# Spec Kit's own files (templates, scripts, skills): written by the Specify
+# CLI, refreshed by it, never reformatted here. specs/ is ours and is checked.
+.specify
+.claude
